@@ -11,64 +11,83 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+// Esta clase es un adaptador para un RecyclerView.
+// El adaptador se encarga de gestionar cómo se muestran los datos (tareas) en una lista.
 public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHolder> {
 
-    private final List<Tarea> listaTareas; // Lista de tareas que se va a mostrar
-    private final OnTareaClickListener listener; // Interfaz para manejar los clics en las tareas
+    // Lista de tareas que se mostrará en el RecyclerView.
+    // Es como una lista de datos que queremos mostrar en pantalla.
+    private final List<Tarea> listaTareas;
 
-    // Constructor
+    // Listener que permite manejar qué sucede cuando se hace clic en una tarea.
+    private final OnTareaClickListener listener;
+
+
+    // Constructor de la clase TareaAdapter.
+    // Se utiliza para inicializar el adaptador con la lista de tareas y el listener.
     public TareaAdapter(List<Tarea> listaTareas, OnTareaClickListener listener) {
-        this.listaTareas = listaTareas; // Asigna la lista de tareas que se mostrará
-        this.listener = listener; // Asigna el listener para manejar los clics
+        this.listaTareas = listaTareas; // Guardamos la lista de tareas.
+        this.listener = listener; // Guardamos el listener para manejar los clics.
     }
 
-    // Método para crear el ViewHolder. Es llamado cuando se necesita un nuevo item para la lista.
+
+    // Este método se llama cuando se necesita un nuevo "item" o elemento para la lista.
     @NonNull
     @Override
     public TareaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflamos el layout para un item de tarea
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tarea, parent, false);
-        return new TareaViewHolder(view); // Creamos un nuevo ViewHolder con la vista inflada
+        // Aquí inflamos el diseño XML de cada tarea (el "diseño" de cómo se ve un item en la lista).
+        View vistaDeItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tarea, parent, false);
+
+        // Creamos un nuevo ViewHolder que manejará la vista inflada.
+        return new TareaViewHolder(vistaDeItem);
     }
 
-    // Método que enlaza los datos con las vistas de cada item en la lista.
-    @SuppressLint("SetTextI18n") // Suprime la advertencia sobre el uso de concatenación en texto
+
+    // Este método se llama para "llenar" un item con datos de una tarea específica.
+    @SuppressLint("SetTextI18n") // Ignoramos una advertencia sobre concatenar texto.
     @Override
     public void onBindViewHolder(@NonNull TareaViewHolder holder, int position) {
-        // Obtenemos la tarea en la posición actual
-        Tarea tarea = listaTareas.get(position);
-        // Asignamos los valores de la tarea a los TextViews del ViewHolder
-        holder.asignaturaTextView.setText(tarea.getAsignatura());
-        holder.tituloTextView.setText(tarea.getTitulo());
-        holder.descripcionTextView.setText(tarea.getDescripcion());
-        holder.fechaEntregaTextView.setText("Fecha de entrega: " + tarea.getFechaEntrega());
-        holder.horaEntregaTextView.setText("Hora de entrega: " + tarea.getHoraEntrega());
-        // Establecemos el estado de la tarea como "Completada" o "Pendiente"
-        holder.estadoTextView.setText(tarea.estaCompletada() ? "Completada" : "Pendiente");
+        // Obtenemos la tarea correspondiente a esta posición en la lista.
+        Tarea tareaActual = listaTareas.get(position);
 
-        // Establecemos un OnClickListener para que el usuario pueda interactuar con el item
-        holder.itemView.setOnClickListener(v -> listener.onTareaClick(tarea));
+        // Llenamos las vistas con los datos de la tarea.
+        holder.asignaturaTextView.setText(tareaActual.getAsignatura()); // Nombre de la asignatura.
+        holder.tituloTextView.setText(tareaActual.getTitulo()); // Título de la tarea.
+        holder.descripcionTextView.setText(tareaActual.getDescripcion()); // Descripción de la tarea.
+        holder.fechaEntregaTextView.setText("Fecha de entrega: " + tareaActual.getFechaEntrega()); // Fecha de entrega.
+        holder.horaEntregaTextView.setText("Hora de entrega: " + tareaActual.getHoraEntrega()); // Hora de entrega.
+        holder.estadoTextView.setText(tareaActual.estaCompletada() ? "Completada" : "Pendiente"); // Estado de la tarea.
+
+        // Configuramos un evento de clic para la tarea.
+        holder.itemView.setOnClickListener(v -> listener.onTareaClick(tareaActual));
+        // Cuando se hace clic, llamamos al método del listener con la tarea actual.
     }
 
-    // Método que devuelve el número de tareas en la lista
+
+    // Este método devuelve el número total de tareas en la lista.
     @Override
     public int getItemCount() {
-        return listaTareas.size(); // Devuelve el tamaño de la lista de tareas
+        return listaTareas.size(); // Devolvemos el tamaño de la lista.
     }
 
-    // ViewHolder es una clase interna que mantiene las vistas de cada item
+
+    // Clase interna que se encarga de manejar las vistas de cada tarea.
+    // Un ViewHolder contiene las referencias a los elementos visuales que usamos en cada item.
     public static class TareaViewHolder extends RecyclerView.ViewHolder {
-        // Definimos los TextViews que se van a mostrar en cada item
+        // Declaramos las vistas que mostrarán la información de una tarea.
         TextView asignaturaTextView;
         TextView tituloTextView;
         TextView descripcionTextView;
         TextView fechaEntregaTextView;
         TextView horaEntregaTextView;
         TextView estadoTextView;
-        // Constructor de ViewHolder, que recibe la vista de un item
+
+        // Constructor de TareaViewHolder.
+        // Recibe la vista de un item y asocia las variables con los IDs de las vistas en el diseño XML.
         public TareaViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Asociamos las vistas a los TextViews definidos
+
+            // Vinculamos las variables con las vistas específicas del diseño.
             asignaturaTextView = itemView.findViewById(R.id.asignaturaTextView);
             tituloTextView = itemView.findViewById(R.id.tituloTextView);
             descripcionTextView = itemView.findViewById(R.id.descripcionTextView);
@@ -78,8 +97,10 @@ public class TareaAdapter extends RecyclerView.Adapter<TareaAdapter.TareaViewHol
         }
     }
 
-    // Interfaz que define el comportamiento al hacer clic en una tarea
+
+    // Interfaz que define el comportamiento al hacer clic en una tarea.
+    // Permite que otras clases decidan qué hacer cuando se hace clic en una tarea.
     public interface OnTareaClickListener {
-        void onTareaClick(Tarea tarea); // Método que se invoca cuando el usuario hace clic en una tarea
+        void onTareaClick(Tarea tarea); // Este método se llama cuando se hace clic en una tarea.
     }
 }

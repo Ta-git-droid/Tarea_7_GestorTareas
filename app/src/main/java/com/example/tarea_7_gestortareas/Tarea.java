@@ -3,27 +3,34 @@ package com.example.tarea_7_gestortareas;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+// Clase Tarea: representa una tarea que puede ser asignada y completada.
+// Implementa Parcelable para permitir que se envíen objetos Tarea entre componentes de Android (como Activities y Fragments).
 public class Tarea implements Parcelable {
 
-    // Atributos de la clase Tarea
-    private String asignatura;  // Asignatura (PMDM, AD, etc.)
-    private String titulo;      // Título del deber
-    private String descripcion; // Descripción del deber
-    private String fechaEntrega; // Fecha de entrega en formato dd/MM/yyyy
-    private String horaEntrega; // Hora de entrega en formato HH:mm
-    private boolean estaCompletada; // Estado del deber (completada o pendiente)
+    // Atributos de la clase Tarea:
+    private String asignatura;  // Nombre de la asignatura (por ejemplo, PMDM, AD, etc.).
+    private String titulo;      // Título o nombre de la tarea.
+    private String descripcion; // Descripción detallada de la tarea.
+    private String fechaEntrega; // Fecha en la que la tarea debe entregarse (formato: dd/MM/yyyy).
+    private String horaEntrega; // Hora en la que la tarea debe entregarse (formato: HH:mm).
+    private boolean estaCompletada; // Indica si la tarea está completada (true) o pendiente (false).
 
-    // Constructor
+
+    // Constructor: se utiliza para crear un objeto Tarea con todos sus atributos.
     public Tarea(String asignatura, String titulo, String descripcion, String fechaEntrega, String horaEntrega, boolean estaCompletada) {
-        this.asignatura = asignatura;
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.fechaEntrega = fechaEntrega;
-        this.horaEntrega = horaEntrega;
-        this.estaCompletada = estaCompletada;
+        this.asignatura = asignatura;       // Inicializamos el nombre de la asignatura.
+        this.titulo = titulo;               // Inicializamos el título de la tarea.
+        this.descripcion = descripcion;     // Inicializamos la descripción de la tarea.
+        this.fechaEntrega = fechaEntrega;   // Inicializamos la fecha de entrega.
+        this.horaEntrega = horaEntrega;     // Inicializamos la hora de entrega.
+        this.estaCompletada = estaCompletada; // Inicializamos el estado de la tarea.
     }
 
-    // Getters y Setters para acceder y modificar los atributos de la tarea
+
+    // Métodos "getter" y "setter" para cada atributo:
+    // Los "getters" permiten obtener el valor de un atributo.
+    // Los "setters" permiten modificar el valor de un atributo.
+
     public String getAsignatura() {
         return asignatura;
     }
@@ -72,41 +79,52 @@ public class Tarea implements Parcelable {
         this.estaCompletada = estaCompletada;
     }
 
-    // Implementación de la interfaz Parcelable para poder enviar objetos Tarea entre componentes (Activities, Fragments, etc.)
+
+    // Parcelable: permite "empaquetar" objetos Tarea para enviarlos entre Activities o Fragments.
+
+    // Constructor protegido que crea un objeto Tarea a partir de un Parcel.
+    // Un Parcel es una forma de "empaquetar" datos para transferirlos entre diferentes partes de la aplicación.
     protected Tarea(Parcel in) {
-        asignatura = in.readString();  // Lee la asignatura desde el Parcel
-        titulo = in.readString();      // Lee el título desde el Parcel
-        descripcion = in.readString(); // Lee la descripción desde el Parcel
-        fechaEntrega = in.readString(); // Lee la fecha de entrega desde el Parcel
-        horaEntrega = in.readString(); // Lee la hora de entrega desde el Parcel
-        estaCompletada = in.readByte() != 0; // Lee el estado de completado (convierte el byte a booleano)
+        asignatura = in.readString();  // Leemos la asignatura desde el Parcel.
+        titulo = in.readString();      // Leemos el título desde el Parcel.
+        descripcion = in.readString(); // Leemos la descripción desde el Parcel.
+        fechaEntrega = in.readString(); // Leemos la fecha de entrega desde el Parcel.
+        horaEntrega = in.readString(); // Leemos la hora de entrega desde el Parcel.
+        estaCompletada = in.readByte() != 0; // Leemos el estado como byte y lo convertimos a booleano.
     }
 
-    // Creator es necesario para la implementación de Parcelable y para la creación de nuevos objetos Tarea desde un Parcel
+
+    // Este objeto CREATOR es necesario para la implementación de Parcelable.
+    // Permite crear nuevos objetos Tarea a partir de un Parcel.
     public static final Creator<Tarea> CREATOR = new Creator<Tarea>() {
         @Override
         public Tarea createFromParcel(Parcel in) {
-            return new Tarea(in); // Crea un nuevo objeto Tarea a partir del Parcel
+            return new Tarea(in); // Crea un objeto Tarea a partir de los datos en el Parcel.
         }
 
         @Override
         public Tarea[] newArray(int size) {
-            return new Tarea[size]; // Crea un nuevo array de objetos Tarea
+            return new Tarea[size]; // Crea un array de objetos Tarea del tamaño especificado.
         }
     };
 
+
+    // Método obligatorio para Parcelable. No es necesario usarlo en la mayoría de los casos.
     @Override
     public int describeContents() {
-        return 0; // Método obligatorio de Parcelable, devuelve 0 ya que no se manejan tipos especiales
+        return 0; // Retorna 0 porque no hay tipos especiales de contenido en este caso.
     }
 
+
+    // Método que "escribe" los datos de la tarea en un Parcel.
+    // Esto es lo que permite que se transfieran los datos entre componentes.
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(asignatura);   // Escribe la asignatura en el Parcel
-        dest.writeString(titulo);       // Escribe el título en el Parcel
-        dest.writeString(descripcion);  // Escribe la descripción en el Parcel
-        dest.writeString(fechaEntrega); // Escribe la fecha de entrega en el Parcel
-        dest.writeString(horaEntrega);  // Escribe la hora de entrega en el Parcel
-        dest.writeByte((byte) (estaCompletada ? 1 : 0)); // Escribe el estado de completado como un byte (1 para true, 0 para false)
+        dest.writeString(asignatura);   // Escribe la asignatura en el Parcel.
+        dest.writeString(titulo);       // Escribe el título en el Parcel.
+        dest.writeString(descripcion);  // Escribe la descripción en el Parcel.
+        dest.writeString(fechaEntrega); // Escribe la fecha de entrega en el Parcel.
+        dest.writeString(horaEntrega);  // Escribe la hora de entrega en el Parcel.
+        dest.writeByte((byte) (estaCompletada ? 1 : 0)); // Convierte el estado booleano a byte (1 para true, 0 para false).
     }
 }
